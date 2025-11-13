@@ -11,14 +11,14 @@
 	- Ggf. neue GPT Partitions-Tabelle anlegen
 	- drei Partitionen:
 		- 1: boot partition (ef00 - EFI System Partition) 1 GB (+1G)
-		- 2: 16 GB Swap Partition
+		- ~~2: 16 GB Swap Partition~~ -> nutze stattdessen ein Swap File in dem verschlüsselten Luks Container (eigenes btrfs subvolume)
 		- 3: Root (für LUKS container) (8300 - Linux Filesystem) restliche Plattenkapazität
 8. Dateisysteme erzeugen, Swap aktivieren und LUKS Container erstellen:
 	- 1: `mkfs.fat -F32 /dev/...`
-	- 2: `mkswap /dev/...`
-	- 2: `swapon /dev/...`
+	- ~~2: `mkswap /dev/...`~~
+	- ~~2: `swapon /dev/...`~~ (später swapfile auf eingenem btrfs subvolume)
 	- 3: Mittels `cryptsetup benchmark` kann man testen, ob sich gewisse Einstellungen besser eignen (CPU Beschleunigung für gewisse Ciphers z.B.)
-	- 3: `cryptsetup --cipher=aes-xts-plain64 --hash=sha512  luksFormat /dev/...`
+	- 3: `cryptsetup --verbose --cipher=aes-xts-plain64 --key-size=512 --hash=sha512 --iter-time=5000 --type=luks2 luksFormat /dev/...`
 	- 3: `cryptsetup luksOpen /dev/... rootpartition` zum mounten
 	- 3: BTRFS Dateisystem erstellen: `mkfs.btrfs /dev/mapper/rootpartition`
 9. BTRFS Subvolumes erstellen:
@@ -26,21 +26,24 @@
 	1. Zuerst mounten: `mount /dev/mapper/rootpartition /mnt`
 	2. `cd /mnt`
 	3. `btrfs subvolume create @`
-	4. `btrfs subvolume create @home`
-	5. `btrfs subvolume create @var_log` (für /var/log)
-	6. (ignore)`btrfs subvolume create @var_cache` (für /var/cache)
-	7. (ignore)`btrfs subvolume create @var_lib_docker` (für /var/lib/docker)
-	8. (ignore, snapper init erzeugt dann später subvolume)`btrfs subvolume for snapshots @.snapshots` (für /.snapshots)
-	9. unmounten: `umount /mnt`
+ 	4. `btrfs subvolume create @swap`
+	5. `btrfs subvolume create @home`
+	6. `btrfs subvolume create @var_log` (für /var/log)
+	7. `btrfs subvolume create @var_cache` (für /var/cache)
+	8. (ignore)`btrfs subvolume create @var_lib_docker` (für /var/lib/docker)
+	9. (ignore, snapper init erzeugt dann später subvolume)`btrfs subvolume for snapshots @.snapshots` (für /.snapshots)
+	10. unmounten: `umount /mnt`
 10. Mounten aller Subvolumens:
 	1. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@ /dev/mapper/rootpartition /mnt`
 	2. Erstellen der Ordner für die anderen Subvolumes + boot:
-			`mkdir -p /mnt/{boot,home,var/log,var/cache,.snapshots}`
-	3. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@home /dev/mapper/rootpartition /mnt/home`
-	4. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@var_log /dev/mapper/rootpartition /mnt/var/log`
-	5. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@var_cache /dev/mapper/rootpartition /mnt/var/cache`
-	6. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@.snapshots /dev/mapper/rootpartition /mnt/.snapshots`
-	7. Noch boot Partition mounten: `mount /dev/... /mnt/boot` 
+			`mkdir -p /mnt/{swap,boot,home,var/log,var/cache}`
+	3. swap subvolume mounten nach /mnt/swap
+ 	4. swapfile erstellen: btrfs filesystem mkswapfile --size 16g --uuid clear /mnt/swap/swapfile
+	5. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@home /dev/mapper/rootpartition /mnt/home`
+	6. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@var_log /dev/mapper/rootpartition /mnt/var/log`
+	7. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@var_cache /dev/mapper/rootpartition /mnt/var/cache`
+	8. ~~`mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@.snapshots /dev/mapper/rootpartition /mnt/.snapshots`~~ (wird später beim snapper konfigurieren erstellt
+	9. Noch boot Partition mounten: `mount /dev/... /mnt/boot` 
 11. Reflector mirror list anpassen, damit wir nur von den nähesten/schnellsten Mirrors Pakete laden: `reflector --country Germany -i "(\.netcologne\.de|\.uni\-|\.tu\-|\.hs\-|\.fu\-berlin|\.rz\.rub\.de|\.rwth\-aachen\.de|\.oth\-regensburg\.de|\.fau\.de|\.gwdg\.de)" --latest 20 --sort rate --save /etc/pacman.d/mirrorlist && pacman -Syy` 
 12. mit pacstrap die grundlegenden Dateien installieren: `pacstrap -K /mnt base linux linux-firmware linux-headers linux-lts linux-lts-headers vim git` 
 13. fstab erstellen lassen mit `genfstab -U /mnt >> /mnt/etc/fstab` 
@@ -72,7 +75,7 @@
 	`cryptdevice=UUID="UUID-hier-einfügen":rootpartition root=/dev/mapper/rootpartition`. Danach `grub-mkconfig -o /boot/grub/grub.cfg`
 27. Noch einige Services enablen: 
 		`systemctl enable NetworkManager`
-		`systemctl enable cups`
+		`systemctl enable cups` (not installed yet!)
 		`systemctl enable fstrim.timer` (zuerst sicherstellen, dass meine SSD trim unterstützt! siehe https://wiki.archlinux.org/title/Solid_state_drive)
 28. Reboot
 29. Snapper installieren: `pacman -S snapper` und initialisieren
