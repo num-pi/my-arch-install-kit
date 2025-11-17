@@ -78,7 +78,8 @@
 		`systemctl enable NetworkManager`
 		`systemctl enable cups` (not installed yet!)
 		`systemctl enable fstrim.timer` (zuerst sicherstellen, dass meine SSD trim unterstützt! siehe https://wiki.archlinux.org/title/Solid_state_drive)
-29. Reboot
-30. Snapper installieren: `pacman -S snapper` und initialisieren
+30. pacman -S amd-ucode (oder intel-ucode) zum patchen der CPU firmware
+30. Reboot
+31. Snapper installieren: `pacman -S snapper` und initialisieren
 	`snapper -c root create-config /`
-31. Ersten Snapper Snapshot machen: `snapper -c root create --description Erster Snapshot`
+32. Ersten Snapper Snapshot machen: `snapper -c root create --description Erster Snapshot`
