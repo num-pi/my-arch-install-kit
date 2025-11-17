@@ -45,7 +45,7 @@
 	8. ~~`mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@.snapshots /dev/mapper/rootpartition /mnt/.snapshots`~~ (wird später beim snapper konfigurieren erstellt
 	9. Noch boot Partition mounten: `mount /dev/... /mnt/boot` 
 11. Reflector mirror list anpassen, damit wir nur von den nähesten/schnellsten Mirrors Pakete laden: `reflector --country Germany -i "(\.netcologne\.de|\.uni\-|\.tu\-|\.hs\-|\.fu\-berlin|\.rz\.rub\.de|\.rwth\-aachen\.de|\.oth\-regensburg\.de|\.fau\.de|\.gwdg\.de)" --latest 20 --sort rate --save /etc/pacman.d/mirrorlist && pacman -Syy` 
-12. mit pacstrap die grundlegenden Dateien installieren: `pacstrap -K /mnt base linux linux-firmware linux-headers linux-lts linux-lts-headers vim git` 
+12. mit pacstrap die grundlegenden Dateien installieren: `pacstrap -K /mnt base base-devel linux linux-firmware linux-headers linux-lts linux-lts-headers vim git networkmanager` 
 13. fstab erstellen lassen mit `genfstab -U /mnt >> /mnt/etc/fstab` 
 14. chroot in unser neu erstelltes System: `arch-chroot /mnt` 
 15. Localtime anpassen: `ln -sf /usr/share/zoneinfe/Europe/Berlin /etc/localtime`
@@ -65,19 +65,20 @@
 20. Zusätzliche Pakete installieren: `pacman -S sudo`
 21. `EDITOR=vim visudo` und folgende Zeile unkommentieren: `%wheel ALL=(ALL:ALL) ALL`, dadurch erhalten alle User der Gruppe wheel sudo Privilegien
 22. Zusätzliche Pakete installieren:
-	`pacman -S base-devel dosfstools grub efibootmgr nano neovim mtools reflector rsync networkmanager os-prober btrfs-progs grub-btrfs man-db man-pages`
+	`pacman -S bash-completion dosfstools grub efibootmgr nano neovim mtools reflector rsync networkmanager os-prober btrfs-progs man-db man-pages`
 23. Boot Optionen setzen: `vim /etc/mkinitcpio.conf` und Zeile `MODULES=()` in `MODULES=(btrfs)` und in Zeile `HOOKS=(...)` vor filesystems `encrypt` einfügen.
 	Danach `mkinitcpio -p linux` und danach noch `mkinitcpio -p linux-lts`
 	
-24. Grub Bootloader installieren: `grub-install --target=x86_64-evi --efi-directory=/boot --bootloader-id=GRUB`
-25. Grub-Config erstellen: `grub-mkconfig -o /boot/grub.cfg`
-26. Via `blkid` die UUID der LUKS Partition holen (kopieren) und `vim /etc/default/grub` editieren. Dort in Zeile `GRUB_CMDLINE_LINUX_DEFAULT="...` folgendes hinten anfügen:
+24. Grub Bootloader installieren: `grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB`
+25. Grub-Config erstellen: `grub-mkconfig -o /boot/grub/grub.cfg`
+26. Via `blkid` die UUID der LUKS Partition (Crypto_LUKS) holen (kopieren) und `vim /etc/default/grub` editieren. Dort in Zeile `GRUB_CMDLINE_LINUX_DEFAULT="...` folgendes hinten anfügen:
 	`cryptdevice=UUID="UUID-hier-einfügen":rootpartition root=/dev/mapper/rootpartition`. Danach `grub-mkconfig -o /boot/grub/grub.cfg`
-27. Noch einige Services enablen: 
+	Zusätzlich die Zeile `GRUB_DISABLE_OS_PROBER=false` auskommentieren
+28. Noch einige Services enablen: 
 		`systemctl enable NetworkManager`
 		`systemctl enable cups` (not installed yet!)
 		`systemctl enable fstrim.timer` (zuerst sicherstellen, dass meine SSD trim unterstützt! siehe https://wiki.archlinux.org/title/Solid_state_drive)
-28. Reboot
-29. Snapper installieren: `pacman -S snapper` und initialisieren
+29. Reboot
+30. Snapper installieren: `pacman -S snapper` und initialisieren
 	`snapper -c root create-config /`
-30. Ersten Snapper Snapshot machen: `snapper -c root create --description Erster Snapshot`
+31. Ersten Snapper Snapshot machen: `snapper -c root create --description Erster Snapshot`
