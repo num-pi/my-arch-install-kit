@@ -73,3 +73,15 @@ GRUB_DISABLE_RECOVERY=true
 # operating systems.
 GRUB_DISABLE_OS_PROBER=false
 ```
+
+# Konfiguration nach der Installation
+
+
+    bash-completion
+    firefox
+    reflector (um mirrorliste automatisch zu erstellen)
+-  ttf-jetbrains-mono-nerd (font)
+-  fonts in kitty terminal emulator gesetzt via `kitten choose-font`
+-  Theme in Kitty gesetzt: `kitten theme` - auf catputchin-frappe
+- wlsunset (augenfreundliche farbtöne in den Abendstunden)
+- waybar installiert (status bar für hyprland)
