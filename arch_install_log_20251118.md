@@ -85,3 +85,4 @@ GRUB_DISABLE_OS_PROBER=false
 -  Theme in Kitty gesetzt: `kitten theme` - auf catputchin-frappe
 - wlsunset (augenfreundliche farbtöne in den Abendstunden)
 - waybar installiert (status bar für hyprland)
+- os-prober installiert und `grub-mkconfig -o /boot/grub/grub.cfg`
