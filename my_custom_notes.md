@@ -16,10 +16,10 @@
 8. Dateisysteme erzeugen, Swap aktivieren und LUKS Container erstellen:
 	- 1: `mkfs.fat -F32 /dev/...`
 	- ~~2: `mkswap /dev/...`~~
-	- ~~2: `swapon /dev/...`~~ (später swapfile auf eingenem btrfs subvolume)
+	- ~~2: `swapon /dev/...`~~ (später swapfile auf eingenem btrfs subvolume - NACH DER BASIS INSTALLATION!)
 	- 3: Mittels `cryptsetup benchmark` kann man testen, ob sich gewisse Einstellungen besser eignen (CPU Beschleunigung für gewisse Ciphers z.B.)
 	- 3: `cryptsetup --verbose --cipher=aes-xts-plain64 --key-size=512 --hash=sha512 --iter-time=5000 --type=luks2 luksFormat /dev/...`
-	- 3: `cryptsetup luksOpen /dev/... rootpartition` zum mounten
+	- 3: `cryptsetup luksOpen /dev/... rootpartition` zum mounten, bzw. besser `cryptsetup --allow-discards --persistent open /dev/sdaX root` um TRIM Support nicht unmöglich zu machen, siehe (https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD))
 	- 3: BTRFS Dateisystem erstellen: `mkfs.btrfs /dev/mapper/rootpartition`
 9. BTRFS Subvolumes erstellen:
 	[[BTRFS Subvolumes Layout Recherche]]
