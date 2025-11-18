@@ -1,4 +1,12 @@
 Installation von Arch auf meinem Desktop PC am 18.11.2025.
+Mittels `archinstall` Programm ausgeführt.
+- Best-Effort Partitionierung mit einer /boot Partition und einer / Partition
+- / Partition ist LUKS verschlüsselter container mit BTRFS im inneren
+- @,@home,@log, @pkg als initiale BTRFS subvolumes
+- zstd Compression
+- zram Swap
+- Type: Desktop mit Hyprland
+
 /etc/default/grub:
 ```
 # GRUB boot loader configuration
