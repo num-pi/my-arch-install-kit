@@ -84,3 +84,9 @@
 	`snapper -c root create-config /`
 32. Ersten Snapper Snapshot machen: `snapper -c root create --description Erster Snapshot`
 33. Noch Swapfile erstellen und aktivieren.
+34. Weitere Pakete installieren:
+	- bash-completion
+ 	- firefox
+  	- reflector (um mirrorliste automatisch zu erstellen) 
+    - ttf-jetbrains-mono-nerd (font)
+    - wlsunset (augenfreundliche farbtöne in den Abendstunden)
