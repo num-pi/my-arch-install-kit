@@ -92,3 +92,4 @@ GRUB_DISABLE_OS_PROBER=false
 - breeze installieren (gtk theme) kann dann mittels nwg-look konfiguriert werden.
 - hyprpaper installieren (hyprland wallpaper tool)
 - xdg-user-dirs installieren und dann `xdg-user-dirs-update` ausführen um Standard-Ordner zu erstellen
+- syncthing installieren und via `systemctl enable --user syncthing` TODO!!!!!!
