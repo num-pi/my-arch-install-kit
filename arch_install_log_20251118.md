@@ -90,3 +90,4 @@ GRUB_DISABLE_OS_PROBER=false
 - fastfetch installieren
 - nwg-look installieren als gtk theme manager via pacman erhältlich (repo zur info hier: https://github.com/nwg-piotr/nwg-look)
 - breeze installieren (gtk theme) kann dann mittels nwg-look konfiguriert werden.
+- hyprpaper installieren (hyprland wallpaper tool)
