@@ -37,8 +37,8 @@
 	1. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@ /dev/mapper/rootpartition /mnt`
 	2. Erstellen der Ordner für die anderen Subvolumes + boot:
 			`mkdir -p /mnt/{boot,home,var/log,var/cache}`
-	3. swap subvolume mounten nach /mnt/swap
- 	4. swapfile erstellen: btrfs filesystem mkswapfile --size 16g --uuid clear /mnt/swap/swapfile
+	3. (swap subvolume mounten nach /mnt/swap)
+ 	4. (swapfile erstellen: btrfs filesystem mkswapfile --size 16g --uuid clear /mnt/swap/swapfile)
 	5. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@home /dev/mapper/rootpartition /mnt/home`
 	6. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@var_log /dev/mapper/rootpartition /mnt/var/log`
 	7. `mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@var_cache /dev/mapper/rootpartition /mnt/var/cache`
