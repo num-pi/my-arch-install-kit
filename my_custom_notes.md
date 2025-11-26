@@ -45,7 +45,7 @@
 	8. ~~`mount -o noatime,space_cache=v2,compress=zstd,ssd,discard=async,subvol=@.snapshots /dev/mapper/rootpartition /mnt/.snapshots`~~ (wird später beim snapper konfigurieren erstellt
 	9. Noch boot Partition mounten: `mount /dev/... /mnt/boot` 
 11. Reflector mirror list anpassen, damit wir nur von den nähesten/schnellsten Mirrors Pakete laden: `reflector --country Germany -i "(\.netcologne\.de|\.uni\-|\.tu\-|\.hs\-|\.fu\-berlin|\.rz\.rub\.de|\.rwth\-aachen\.de|\.oth\-regensburg\.de|\.fau\.de|\.gwdg\.de)" --latest 20 --sort rate --save /etc/pacman.d/mirrorlist && pacman -Syy` 
-12. mit pacstrap die grundlegenden Dateien installieren: `pacstrap -K /mnt base base-devel linux linux-firmware linux-headers linux-lts linux-lts-headers vim git networkmanager` 
+12. mit pacstrap die grundlegenden Dateien installieren: `pacstrap -K /mnt base base-devel linux linux-firmware linux-headers linux-lts linux-lts-headers vim git networkmanager iwd` 
 13. fstab erstellen lassen mit `genfstab -U /mnt >> /mnt/etc/fstab` 
 14. chroot in unser neu erstelltes System: `arch-chroot /mnt` 
 15. Localtime anpassen: `ln -sf /usr/share/zoneinfe/Europe/Berlin /etc/localtime`
@@ -79,6 +79,7 @@
 		`systemctl enable cups` (not installed yet!)
 		`systemctl enable fstrim.timer` (zuerst sicherstellen, dass meine SSD trim unterstützt! siehe https://wiki.archlinux.org/title/Solid_state_drive)
 30. pacman -S amd-ucode (oder intel-ucode) zum patchen der CPU firmware
+31. Für neues Lenovo Notebook noch installieren: sof-firmware mesa vulkan-intel
 30. Reboot
 31. Snapper installieren: `pacman -S snapper` und initialisieren
 	`snapper -c root create-config /`
