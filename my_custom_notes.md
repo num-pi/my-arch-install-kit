@@ -19,7 +19,7 @@
 	- ~~2: `swapon /dev/...`~~ (später swapfile auf eingenem btrfs subvolume - NACH DER BASIS INSTALLATION!)
 	- 3: Mittels `cryptsetup benchmark` kann man testen, ob sich gewisse Einstellungen besser eignen (CPU Beschleunigung für gewisse Ciphers z.B.)
 	- 3: `cryptsetup --verbose --cipher=aes-xts-plain64 --key-size=512 --hash=sha512 --iter-time=5000 --type=luks2 luksFormat /dev/...`
-	- 3: `cryptsetup luksOpen /dev/... rootpartition` zum mounten, bzw. besser `cryptsetup --allow-discards --persistent open /dev/sdaX root` um TRIM Support nicht unmöglich zu machen, siehe (https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD))
+	- 3: `cryptsetup luksOpen /dev/... rootpartition` zum mounten, bzw. besser `cryptsetup --allow-discards --persistent open /dev/sdaX rootpartition` um TRIM Support nicht unmöglich zu machen, siehe (https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD))
 	- 3: BTRFS Dateisystem erstellen: `mkfs.btrfs /dev/mapper/rootpartition`
 9. BTRFS Subvolumes erstellen:
 	[[BTRFS Subvolumes Layout Recherche]]
@@ -66,13 +66,16 @@
 21. `EDITOR=vim visudo` und folgende Zeile unkommentieren: `%wheel ALL=(ALL:ALL) ALL`, dadurch erhalten alle User der Gruppe wheel sudo Privilegien
 22. Zusätzliche Pakete installieren:
 	`pacman -S bash-completion dosfstools grub efibootmgr nano neovim mtools reflector rsync networkmanager os-prober btrfs-progs man-db man-pages`
-23. Boot Optionen setzen: `vim /etc/mkinitcpio.conf` und Zeile `MODULES=()` in `MODULES=(btrfs)` und in Zeile `HOOKS=(...)` vor filesystems `encrypt` einfügen.
+23. Boot Optionen setzen: `vim /etc/mkinitcpio.conf` und Zeile `MODULES=()` in `MODULES=(btrfs)` und in Zeile `HOOKS=(...)` vor filesystems `encrypt` einfügen, bzw. laut Arch-wiki eigentlich `sd-encrypt` wenn systemd initramfs verwendet wird (siehe https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition).
 	Danach `mkinitcpio -p linux` und danach noch `mkinitcpio -p linux-lts`
 	
 24. Grub Bootloader installieren: `grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB`
 25. Grub-Config erstellen: `grub-mkconfig -o /boot/grub/grub.cfg`
-26. Via `blkid` die UUID der LUKS Partition (Crypto_LUKS) holen (kopieren) und `vim /etc/default/grub` editieren. Dort in Zeile `GRUB_CMDLINE_LINUX_DEFAULT="...` folgendes hinten anfügen:
-	`cryptdevice=UUID="UUID-hier-einfügen":rootpartition root=/dev/mapper/rootpartition`. Danach `grub-mkconfig -o /boot/grub/grub.cfg`
+26. Via `blkid` die UUID der LUKS Partition (Crypto_LUKS) holen (kopieren) und `vim /etc/default/grub` editieren. Dort in Zeile `GRUB_CMDLINE_LINUX_DEFAULT="...` (oder ohne _DEFAULT) folgendes hinten anfügen:
+	`cryptdevice=UUID="UUID-hier-einfügen":rootpartition root=/dev/mapper/rootpartition`.
+Falls sd-encrypt Hook in mkinitcpio.conf gesetzt ist heißt es stattdessen:
+`rd.luks.name=UUID-hier-einfügen=rootpartition root=/dev/mapper/rootpartition`
+ Danach `grub-mkconfig -o /boot/grub/grub.cfg`
 	Zusätzlich die Zeile `GRUB_DISABLE_OS_PROBER=false` auskommentieren
 28. Noch einige Services enablen: 
 		`systemctl enable NetworkManager`
