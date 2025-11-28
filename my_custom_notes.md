@@ -115,5 +115,6 @@ ODER: `snap-pac` installieren, und snapper-timeline snapshots ausschalten. Snap-
   	- bluez und bluez-utils (bluetooth) pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber (alle für Audio) xdg-user-dirs (user ordner gemäß spezifikation)
   	- reflector (um mirrorliste automatisch zu erstellen) 
     - ttf-jetbrains-mono-nerd ttf-firacode-nerd (fonts)
-    - wlsunset (augenfreundliche farbtöne in den Abendstunden)
+    - wlsunset (augenfreundliche farbtöne in den Abendstunden) (mit den Argumenten -l 50.1, -L 8.7 -L (l = latitude, L = Longitude), ist ungefähr Frankfurt)
+      Dann auch in niri config zum start hinzufügen
     - evolution
