@@ -103,11 +103,17 @@ ODER: `snap-pac` installieren, und snapper-timeline snapshots ausschalten. Snap-
     - in /etc/default/grub `GRUB_DISABLE_SUBMENU=y` auskommentieren
     - und dann unter `GRUB_DEFAULT=` auf die Zahl setzen (z.B. 1)
 35. WindowManager/DE installieren:
-    1. Folgende Pakete installieren: 
+    1. Folgende Pakete installieren:
+       - wayland niri kitty waybar xwayland-sattelite rofi swaybg swaylock
+       - in ~/.config/niri/config.kdl folgende Änderungen machen:
+         - Unter keyboard `layout de` einfügen
+         - Die Applikationen anpassen, z.B. kitty anstall alacritty als Terminal-Emulator, oder Rofi statt fuzzel als app launcher
 36. Noch Swapfile erstellen und aktivieren.
 37. Weitere Pakete installieren:
 	- bash-completion
  	- firefox
+  	- bluez und bluez-utils (bluetooth) pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber (alle für Audio) xdg-user-dirs (user ordner gemäß spezifikation)
   	- reflector (um mirrorliste automatisch zu erstellen) 
-    - ttf-jetbrains-mono-nerd (font)
+    - ttf-jetbrains-mono-nerd ttf-firacode-nerd (fonts)
     - wlsunset (augenfreundliche farbtöne in den Abendstunden)
+    - evolution
