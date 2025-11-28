@@ -98,8 +98,14 @@ Falls sd-encrypt Hook in mkinitcpio.conf gesetzt ist heißt es stattdessen:
 	TIMELINE_LIMIT_WEEKLY="0"
 	TIMELINE_LIMIT_MONTHLY="2"
 	TIMELINE_LIMIT_YEARLY="0"
-35. Noch Swapfile erstellen und aktivieren.
-36. Weitere Pakete installieren:
+ODER: `snap-pac` installieren, und snapper-timeline snapshots ausschalten. Snap-pac macht bei jedem Pacman Befehl (oder zumindest denen, die das System verändern) ein snapshot.
+35. Die Reihenfolge der zu bootenden kernel (wenn z.B. noch lts kernel installiert ist) kann so geändert werden (https://wiki.archlinux.org/title/GRUB/Tips_and_tricks#Changing_the_default_menu_entry)
+    - in /etc/default/grub `GRUB_DISABLE_SUBMENU=y` auskommentieren
+    - und dann unter `GRUB_DEFAULT=` auf die Zahl setzen (z.B. 1)
+35. WindowManager/DE installieren:
+    1. Folgende Pakete installieren: 
+36. Noch Swapfile erstellen und aktivieren.
+37. Weitere Pakete installieren:
 	- bash-completion
  	- firefox
   	- reflector (um mirrorliste automatisch zu erstellen) 
