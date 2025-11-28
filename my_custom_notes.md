@@ -78,9 +78,12 @@ Falls sd-encrypt Hook in mkinitcpio.conf gesetzt ist heißt es stattdessen:
  Danach `grub-mkconfig -o /boot/grub/grub.cfg`
 	Zusätzlich die Zeile `GRUB_DISABLE_OS_PROBER=false` auskommentieren
 28. Noch einige Services enablen: 
-		`systemctl enable NetworkManager`
+		`systemctl enable NetworkManager` (für Netzwerkverbindungen + DHCP Client)
+		~~`systemctl enable iwd.service` (für WLAN - in Verbindung mit NetworkManager)~~ iwd service nicht starten! Wird gleich als Backend für NetworkManager konfiguriert.
+		`systemctl enable systemd-resolved` (für dns auflösung)
 		`systemctl enable cups` (not installed yet!)
 		`systemctl enable fstrim.timer` (zuerst sicherstellen, dass meine SSD trim unterstützt! siehe https://wiki.archlinux.org/title/Solid_state_drive)
+29. iwd als NetworkManager Backend konfigurieren (https://wiki.archlinux.org/title/NetworkManager#Using_iwd_as_the_Wi-Fi_backend)
 30. pacman -S amd-ucode (oder intel-ucode) zum patchen der CPU firmware
 31. Für neues Lenovo Notebook noch installieren: sof-firmware mesa vulkan-intel
 30. Reboot
