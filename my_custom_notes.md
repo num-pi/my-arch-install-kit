@@ -90,8 +90,16 @@ Falls sd-encrypt Hook in mkinitcpio.conf gesetzt ist heißt es stattdessen:
 31. Snapper installieren: `pacman -S snapper` und initialisieren
 	`snapper -c root create-config /`
 32. Ersten Snapper Snapshot machen: `snapper -c root create --description Erster Snapshot`
-33. Noch Swapfile erstellen und aktivieren.
-34. Weitere Pakete installieren:
+33. Snapper so konfiguriert, dass automatisch ein stündlicher Snapshot gemacht wird (sicherstellen, dass systemd timer `snapper-timeline.timer` läuft und folgende Retention-Policy konfiguriert
+    In: /etc/snapper/configs/config
+	TIMELINE_MIN_AGE="1800"
+	TIMELINE_LIMIT_HOURLY="5"
+	TIMELINE_LIMIT_DAILY="3"
+	TIMELINE_LIMIT_WEEKLY="0"
+	TIMELINE_LIMIT_MONTHLY="2"
+	TIMELINE_LIMIT_YEARLY="0"
+35. Noch Swapfile erstellen und aktivieren.
+36. Weitere Pakete installieren:
 	- bash-completion
  	- firefox
   	- reflector (um mirrorliste automatisch zu erstellen) 
