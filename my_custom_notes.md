@@ -124,4 +124,4 @@ ODER: `snap-pac` installieren, und snapper-timeline snapshots ausschalten. Snap-
     - kitty statt alacritty als terminal emulator
     - keepassxc
     - obsidian installieren (achtung wayland support muss aktiv eingeschaltet werden)
-    - kwallet als keyring (aus kde) (achtung tricky unter wayland!)
+    - kwallet als keyring (aus kde) (achtung ohne kwalletmanager und noch zusätzlich kwallet-pam + das noch konfigurieren)
