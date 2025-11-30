@@ -115,6 +115,13 @@ ODER: `snap-pac` installieren, und snapper-timeline snapshots ausschalten. Snap-
   	- bluez und bluez-utils (bluetooth) pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber (alle für Audio) xdg-user-dirs (user ordner gemäß spezifikation)
   	- reflector (um mirrorliste automatisch zu erstellen) 
     - ttf-jetbrains-mono-nerd ttf-firacode-nerd (fonts)
+    - Position der Bildschirme in Niri anpassen (Laptop links mit x=-1920 bei scale 1 für beide, ext. Monitor x=0 y=0)
     - wlsunset (augenfreundliche farbtöne in den Abendstunden) (mit den Argumenten -l 50.1, -L 8.7 -L (l = latitude, L = Longitude), ist ungefähr Frankfurt)
       Dann auch in niri config zum start hinzufügen
     - evolution
+    - syncthing installieren
+    - qt5-wayland und qt6-wayland
+    - kitty statt alacritty als terminal emulator
+    - keepassxc
+    - obsidian installieren (achtung wayland support muss aktiv eingeschaltet werden)
+    - kwallet als keyring (aus kde) (achtung tricky unter wayland!)
