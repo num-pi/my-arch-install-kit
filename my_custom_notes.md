@@ -127,3 +127,5 @@ ODER: `snap-pac` installieren, und snapper-timeline snapshots ausschalten. Snap-
     - kwallet als keyring (aus kde) (achtung ohne kwalletmanager und noch zusätzlich kwallet-pam + das noch konfigurieren)
 	- spotify-launcher
   	- discord
+38. Bildschirmhintergrund mittels Eintrag in niri config (und installiertem swaybg) setzen:
+    `spawn-sh-at-startup "swaybg -i ~/Downloads/wallpaper_japan_wave_01.jpg -m center"`
